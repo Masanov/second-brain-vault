@@ -1,3 +1,5 @@
+![Second Brain — vault](assets/banner.png)
+
 # Second Brain — vault
 
 *Notes that file themselves. Drop raw material into `raw/`, get an interlinked wiki in `wiki/`.*
