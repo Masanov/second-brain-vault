@@ -1,0 +1,36 @@
+name: Compile raw → wiki
+
+on:
+  push:
+    paths: ["raw/**"]
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 21 * * *" # fallback in case a push was missed
+
+concurrency:
+  group: compile
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Compile raw/ into wiki/
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
+        run: node scripts/compile.mjs
